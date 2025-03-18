@@ -2,8 +2,6 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-// Database connection
-include_once '../config_database/connect.php'; // Your database connection file
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     echo json_encode(["error" => "Only POST method is allowed"]);
@@ -15,9 +13,9 @@ if (!isset($_POST['user_id']) || !isset($_FILES['profile_photo'])) {
     exit;
 }
 
-$user_id = intval($_GET['uid']);
+$user_id = $_POST['user_id'];
 $file = $_FILES['profile_photo'];
-$uploadDir = "uploads/";
+$uploadDir = "../uploads/";
 $fileName = time() . "_" . basename($file["name"]);
 $targetFilePath = $uploadDir . $fileName;
 
@@ -35,9 +33,16 @@ if ($file["size"] > 5000000) { // 5MB limit
 }
 
 try {
+    
+include_once '../config_database/connect.php'; // Your database connection file
+
+    // Ensure the $pdo object is available
+    if (!isset($conn)) {
+        throw new Exception("Database connection error.");
+    }
 
     // Check if user exists and has a profile photo
-    $stmt = $pdo->prepare("SELECT photo FROM user WHERE uid = :user_id");
+    $stmt = $conn->prepare("SELECT photo FROM user WHERE uid = :user_id");
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -45,18 +50,17 @@ try {
     if ($user) {
         // Move uploaded file to server directory
         if (move_uploaded_file($file["tmp_name"], $targetFilePath)) {
-            if ($user['profile_photo']) {
-                // Update existing profile photo
-                $stmt = $pdo->prepare("UPDATE user SET photo = :photo WHERE uid = :user_id");
-            } else {
-                // Insert new profile photo
-                $stmt = $pdo->prepare("INSERT INTO user (photo) VALUES (:photo) WHERE uid = :user_id");
-            }
+            // Update existing profile photo
+            $stmt = $conn->prepare("UPDATE user SET photo = :photo WHERE uid = :user_id");
             $stmt->bindParam(':photo', $fileName);
             $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
             $stmt->execute();
 
-            echo json_encode(["message" => "Profile photo uploaded successfully", "photo_url" => $targetFilePath]);
+            if ($stmt->rowCount() > 0) {
+                echo json_encode(["message" => "Profile photo uploaded successfully", "photo_url" => $targetFilePath]);
+            } else {
+                echo json_encode(["error" => "Failed to update profile photo in the database"]);
+            }
         } else {
             echo json_encode(["error" => "Failed to upload file"]);
         }
@@ -65,5 +69,7 @@ try {
     }
 } catch (PDOException $e) {
     echo json_encode(["error" => "Database error: " . $e->getMessage()]);
+} catch (Exception $e) {
+    echo json_encode(["error" => $e->getMessage()]);
 }
 ?>
