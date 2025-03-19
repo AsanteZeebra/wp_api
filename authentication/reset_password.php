@@ -67,7 +67,9 @@ if ($stmt->rowCount() > 0) {
     // Delete token only if password update was successful
     $stmt = $conn->prepare("DELETE FROM password_reset WHERE token = ?");
     $stmt->execute([$token]);
-
+   
+    echo json_encode(["message" => "Password reset successful and confirmation email sent"]);
+   
     // Send confirmation email
     $mail = new PHPMailer(true);
     try {
@@ -120,19 +122,20 @@ if ($stmt->rowCount() > 0) {
                 </div>
                 <div class='email-body'>
                     <p>Hi,</p>
-                    <p>Your password for your MyPay account has been successfully reset.</p>
+                    <p>Your password for your WorkPass account has been successfully reset.</p>
                     <p>If you did not request this change, please contact support immediately.</p>
                     <p>Thanks,<br>The MyPay Team</p>
                 </div>
                 <div class='email-footer'>
-                    <p>&copy; 2025 MyPay. All rights reserved.</p>
+                    <p>&copy; 2025 WorkPass. All rights reserved.</p>
                 </div>
             </div>
         </body>
         </html>";
 
         $mail->send();
-        echo json_encode(["message" => "Password reset successful and confirmation email sent"]);
+       
+   
     } catch (Exception $e) {
         echo json_encode(["message" => "Password reset successful but email could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
     }

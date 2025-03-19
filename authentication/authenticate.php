@@ -44,7 +44,7 @@ $email = trim($data->email);
 $password = trim($data->password);
 
 // Check if user exists
-$stmt = $conn->prepare("SELECT id, fullname, email, password FROM user WHERE email = :email LIMIT 1");
+$stmt = $conn->prepare("SELECT id, fullname,role, email, password FROM user WHERE email = :email LIMIT 1");
 $stmt->bindParam(":email", $email);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -64,7 +64,8 @@ if ($user && password_verify($password, $user["password"])) {
     http_response_code(200); // OK
     echo json_encode([
         "token" => $jwt,
-        "username" => $user["fullname"]
+        "username" => $user["fullname"],
+        "role"=>$user["role"]
     ]);
     exit;
 } else {
