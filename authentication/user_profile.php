@@ -20,28 +20,16 @@ try {
         throw new Exception("Database connection error.");
     }
 
-    // Check if user_id is provided
-    if (!isset($_GET['user_id'])) {
-        throw new Exception("User ID is required.");
-    }
-
-    $userId = $_GET['user_id'];
+     $idd = GET['user_id'];
 
     // Prepare and execute the SQL query securely
-    $stmt = $conn->prepare("SELECT * FROM user WHERE uid = :user_id");
-    $stmt->bindParam(':user_id', $userId, PDO::PARAM_STR);
+    $stmt = $conn->prepare("SELECT * FROM user WHERE uid='$idd'"); // Avoid exposing sensitive data
     $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($user) {
-        // Send a success response
-        http_response_code(200);
-        echo json_encode(["status" => "success", "user" => $user]);
-    } else {
-        // No user found
-        http_response_code(404);
-        echo json_encode(["status" => "error", "message" => "User not found."]);
-    }
+    // Send a success response
+    http_response_code(200);
+    echo json_encode(["status" => "success", "users" => $users]);
 } catch (Exception $e) {
     http_response_code(500); // Internal Server Error
     error_log($e->getMessage()); // Log error details instead of exposing them

@@ -1,4 +1,5 @@
 <?php
+
 $host = "localhost";  // Change if necessary
 $db_name = "workpass";
 $username = "root";
