@@ -62,6 +62,7 @@ $address = trim($input_data['address']);
 $status = 'Active';
 $salary = trim($input_data['salary']);
 $currency = trim($input_data['currency']);
+$entry_Date = date("l, F j, Y");
 
 $check_case_sql = "SELECT * FROM employees WHERE email = ? OR telephone = ? OR employee_id = ?";
 $stmt_case = $conn->prepare($check_case_sql);
@@ -76,14 +77,14 @@ if ($stmt_case->rowCount() > 0) {
     $stmt_insert = $conn->prepare($insert_sql);
 
     if ($stmt_insert->execute([$fullname, $dob, $gender, $telephone, $email, $employee_id, $department, $position, $salary, $currency, $status, $address])) {
-        sendEmailNotification($email, $fullname, $employee_id, $department, $position);
+        sendEmailNotification($email, $fullname, $employee_id, $department, $position,$entry_Date,$salary, $currency);
         echo json_encode(["status" => "success", "message" => "Employee added successfully"]);
     } else {
         echo json_encode(["status" => "error", "message" => "Database error: " . $stmt_insert->errorInfo()[2]]);
     }
 }
 
-function sendEmailNotification($toEmail, $fullname, $employee_id, $department, $position)
+function sendEmailNotification($toEmail, $fullname, $employee_id, $department, $position,$entry_Date,$salary, $currency)
 {
     $mail = new PHPMailer(true);
     try {
@@ -98,18 +99,19 @@ function sendEmailNotification($toEmail, $fullname, $employee_id, $department, $
         $mail->Password = 'cdnammtwnzkmbzos';
         $mail->setFrom('hr@workpass.com', 'HR Department');
         $mail->addAddress($toEmail, $fullname);
-        $mail->Subject = 'Welcome to Our Team - Employment Details';
+       
 
         $mail->isHTML(true);
         $mail->Subject = 'Welcome to Our Team - Employment Details';
         $mail->Body = "<p>Dear $fullname,</p>
-                      <p>We are pleased to welcome you to our organization. Below are your employment details:</p>
+                      <p>We are pleased to formally confirm your employment as $position in the $department, effective $entry_Date. Below are your employment details:</p>
                       <ul>
                         <li><strong>Employee ID:</strong> $employee_id</li>
-                        <li><strong>Department:</strong> $department</li>
-                        <li><strong>Position:</strong> $position</li>
+                        <li><strong>Salary:</strong> $currency $salary</li>
+                        
                       </ul>
-                      <p>We are excited to have you on board and look forward to your contributions to our team. If you have any questions, please feel free to reach out.</p>
+                      <p>As you join our team, we expect you to uphold professionalism, discipline, and a strong work ethic. Your dedication and productivity in your department will contribute significantly to to the company's growth and success. We encourage you to take your role seriously and make the most of this opportunity. </p>
+                      <p> We look forward to your commitment and exellenxe in fulfilling your responsibilities. Please acknowledge receipt of this email replying </p>
                       <p>Best regards,<br><strong>HR Department</strong></p>";
 
         $mail->send();
