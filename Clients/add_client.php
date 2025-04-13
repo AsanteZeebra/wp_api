@@ -86,7 +86,7 @@ $stmt_case = $conn->prepare($check_case_sql);
 $stmt_case->execute([$passport, $destination]);
 
 if ($stmt_case->rowCount() > 0) {
-    echo json_encode(["status" => "error", "message" => "Case file already exists for this client"]);
+    //echo json_encode(["status" => "error", "message" => "Case file already exists for this client"]);
     exit;
 }
 

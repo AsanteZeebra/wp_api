@@ -36,7 +36,7 @@ if ($input_data === null) {
 }
 
 // Validate required fields
-$required_fields = ["fullname", "case_id", "deadline", "assigned_to", "additional_info"];
+$required_fields = ["fullname", "case_id", "deadline", "assigned_to", "additional"];
 $missing_fields = [];
 
 foreach ($required_fields as $field) {
@@ -50,15 +50,16 @@ if (!empty($missing_fields)) {
     exit;
 }
 
+$month_year = date("Ym"); // Format: YYYYMM (e.g., 202503 for March 2025)
 // Sanitize and assign input data
 $fullname = trim($input_data["fullname"]);
 $case_id = trim($input_data["case_id"]);
 $deadline = trim($input_data["deadline"]);
 $assigned_to = trim($input_data["assigned_to"]);
-$additional_info = isset($input_data["additional_info"]) ? trim($input_data["additional_info"]) : '';
-
+$additional_info = isset($input_data["additional"]) ? trim($input_data["additional"]) : '';
+$Newcase_id = strtoupper("CA" . $month_year . uniqid());
 // Check if case already exists
-$check_case_sql = "SELECT case_id FROM cases WHERE case_id = ? AND status = 'active'";
+$check_case_sql = "SELECT case_id FROM cases WHERE case_id = ? AND status = 'Active'";
 $stmt_case = $conn->prepare($check_case_sql);
 $stmt_case->execute([$case_id]);
 
@@ -78,7 +79,7 @@ if ($stmt_case->rowCount() > 0) {
                    VALUES (?, ?, ?, ?, ?)";
     $stmt_insert = $conn->prepare($insert_sql);
 
-    if ($stmt_insert->execute([$case_id, $fullname, $deadline, $assigned_to, $additional_info])) {
+    if ($stmt_insert->execute([$Newcase_id, $fullname, $deadline, $assigned_to, $additional_info])) {
         echo json_encode(["status" => "success", "message" => "Case added successfully"]);
     } else {
         echo json_encode(["status" => "error", "message" => "Database error: " . $stmt_insert->errorInfo()[2]]);

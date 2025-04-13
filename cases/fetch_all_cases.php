@@ -28,7 +28,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch all case details from database
-$sql = "SELECT * FROM cases";
+$sql = "SELECT * FROM cases WHERE status = 'Active'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
