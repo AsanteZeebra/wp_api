@@ -65,11 +65,11 @@ $message = "Case file created for $fullname with passport number $passport for d
 $year = date("Y");
 $status = "Active";
 
-
 // Generate unique IDs with month and year
 $month_year = date("Ym"); // Format: YYYYMM (e.g., 202503 for March 2025)
 $user_id = strtoupper("CL" . $month_year . uniqid());
 $case_id = strtoupper("CA" . $month_year . uniqid());
+
 // Check if email, passport, or telephone already exists
 $check_sql = "SELECT client_id FROM clients WHERE email = ? OR passport_no = ? OR telephone = ?";
 $stmt = $conn->prepare($check_sql);
@@ -86,7 +86,6 @@ $stmt_case = $conn->prepare($check_case_sql);
 $stmt_case->execute([$passport, $destination]);
 
 if ($stmt_case->rowCount() > 0) {
-    //echo json_encode(["status" => "error", "message" => "Case file already exists for this client"]);
     exit;
 }
 
@@ -97,11 +96,21 @@ $stmt = $conn->prepare($sql);
 
 if ($stmt->execute([$user_id, $fullname, $passport, $nationality, $issue_date, $expiry_date, $email, $telephone, $destination, $application_type, $year, $status])) {
     // Insert into cases table
-    $sql1 = "INSERT INTO cases (case_id, customer_name, passport_no, country, application_type, tittle, message,status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql1 = "INSERT INTO cases (case_id, customer_name, passport_no, country, application_type, tittle, message, status) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt1 = $conn->prepare($sql1);
 
-    if ($stmt1->execute([$case_id, $fullname, $passport, $destination, $application_type, $tittle, $message,$status])) {
-        echo json_encode(["status" => "success", "message" => "Customer added successfully"]);
+    if ($stmt1->execute([$case_id, $fullname, $passport, $destination, $application_type, $tittle, $message, $status])) {
+        // Insert into passports table
+        $sql2 = "INSERT INTO passport (client_id, fullname, passport_no, nationality, issue_date, expiry_date,email, status) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt2 = $conn->prepare($sql2);
+
+        if ($stmt2->execute([$user_id, $fullname, $passport, $nationality, $issue_date, $expiry_date,$email, $status])) {
+            echo json_encode(["status" => "success", "message" => "Customer added successfully"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Database error in passports table: " . $stmt2->errorInfo()[2]]);
+        }
     } else {
         echo json_encode(["status" => "error", "message" => "Database error in cases table: " . $stmt1->errorInfo()[2]]);
     }

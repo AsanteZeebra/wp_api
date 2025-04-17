@@ -25,7 +25,6 @@ include_once("../config_database/connect.php"); // Database connection
 $data = json_decode(file_get_contents("php://input"), true);
 $employee_id = $data['employee_id'] ?? null;
 $month_year = $data['month_year'] ?? null;
-$method = $data['method'] ?? null;
 $email = $data['email'] ?? null;
 $fullname = $data['fullname'] ?? null;
 $entry_Date = date("l, F j, Y");

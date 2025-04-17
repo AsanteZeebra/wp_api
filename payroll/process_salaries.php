@@ -35,7 +35,7 @@ try {
     // Insert salaries only if not already inserted for the same month
     $query = "
         INSERT INTO salary (employee_id,email, fullname, department, position, salary,currency, month_year, status)
-        SELECT e.employee_id,e.email, e.fullname, e.department, e.position, e.salary,e.currency, :month_year, 'Unpaid'
+        SELECT e.employee_id,e.email, e.fullname, e.department, e.position, e.salary,e.currency, :month_year, 'Paid'
         FROM employees e
         WHERE NOT EXISTS (
             SELECT 1 FROM salary s 
