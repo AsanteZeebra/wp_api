@@ -33,9 +33,9 @@ try {
 
     if ($affected_rows > 0) {
         // Fetch updated passports
-        $fetch_sql = "SELECT fullname, email, passport_no, expiry_date FROM passport WHERE expiry_date = ?";
+        $fetch_sql = "SELECT fullname, email, passport_no, expiry_date FROM passport ";
         $stmt_fetch = $conn->prepare($fetch_sql);
-        $stmt_fetch->execute([$current_date]);
+        $stmt_fetch->execute();
         $clients = $stmt_fetch->fetchAll(PDO::FETCH_ASSOC);
 
         $emails_sent = 0;
