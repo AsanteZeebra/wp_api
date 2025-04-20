@@ -53,7 +53,7 @@ if ($user && password_verify($password, $user["password"])) {
     $payload = [
         "iss" => "localhost", // Issuer
         "iat" => time(),      // Issued at
-        "exp" => time() + 3600, // Expiry time (1 hour)
+        "exp" => time() + 90, // Expiry time (1 hour)
         "user_id" => $user["id"],
         "email" => $user["email"],
         "username" => $user["fullname"]
