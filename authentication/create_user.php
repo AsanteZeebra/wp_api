@@ -6,8 +6,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // Database connection
 $host = "localhost";
 $dbname = "fremepxt_workpass";
-$username = "fremepxt_root";
-$password = "0249kwaku";
+$username = "fremepxt_wps";
+$password = "0249Heaven$";
 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
