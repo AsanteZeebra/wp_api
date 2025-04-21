@@ -1,6 +1,6 @@
 <?php
 
-$host = "main.fremikeconsult.com";  // Change if necessary
+$host = "localhost";  // Change if necessary
 $db_name = "fremepxt_workpass";
 $username = "fremepxt_root";
 $password = "0249kwaku";
