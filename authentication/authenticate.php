@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Database connection
-$host = "localhost";
-$db_name = "workpass";
-$username = "root";
+$host = "main.fremikeconsult.com";
+$db_name = "fremepxt_workpass";
+$username = "fremepxt_root";
 $password = "0249kwaku";
 
 try {
