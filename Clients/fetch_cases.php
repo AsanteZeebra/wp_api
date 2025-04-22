@@ -15,11 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Database connection
-$host = "localhost";
-$dbname = "fremepxt_workpass";
-$username = "fremepxt_wps";
-$password = "0249Heaven$";
-
+$host = "localhost"; // Change this to your database host
+$db_name = "workpass";
+$username = "root";
+$password = "0249kwaku";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

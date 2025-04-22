@@ -1,9 +1,9 @@
 <?php
-
-$host = "localhost";  // Change if necessary
-$db_name = "fremepxt_workpass";
-$username = "fremepxt_wps";
-$password = "0249Heaven$";
+// Database connection
+$host = "localhost"; // Change this to your database host
+$db_name = "workpass";
+$username = "root";
+$password = "0249kwaku";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);

@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Database connection
 $host = "localhost"; // Change this to your database host
-$db_name = "fremepxt_workpass";
-$username = "fremepxt_wps";
-$password = "0249Heaven$";
+$db_name = "workpass";
+$username = "root";
+$password = "0249kwaku";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);
@@ -53,7 +53,7 @@ if ($user && password_verify($password, $user["password"])) {
     $payload = [
         "iss" => "localhost", // Issuer
         "iat" => time(),      // Issued at
-        "exp" => time() + 90, // Expiry time (1 hour)
+        "exp" => time() + 3600, // Expiry time (1 hour)
         "user_id" => $user["id"],
         "email" => $user["email"],
         "username" => $user["fullname"]

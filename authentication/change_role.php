@@ -1,3 +1,6 @@
+
+<?php
+// Include necessary libraries
 $mail->Host = 'smtp.gmail.com';
     $mail->Port = 465;
     $mail->isHTML(true);
@@ -8,7 +11,7 @@ $mail->Host = 'smtp.gmail.com';
     $mail->Subject = 'Password Reset Request';
 
 
-    <?php
+    
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: POST");

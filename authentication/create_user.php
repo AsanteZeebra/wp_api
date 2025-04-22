@@ -3,11 +3,12 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
+
 // Database connection
-$host = "localhost";
-$dbname = "fremepxt_workpass";
-$username = "fremepxt_wps";
-$password = "0249Heaven$";
+$host = "localhost"; // Change this to your database host
+$db_name = "workpass";
+$username = "root";
+$password = "0249kwaku";
 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
