@@ -15,19 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Database connection
-$host = "localhost"; // Change this to your database host
-$db_name = "workpass";
-$username = "root";
-$password = "0249kwaku";
-
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    http_response_code(500); // Internal Server Error
-    echo json_encode(["message" => "Database connection failed.", "error" => $e->getMessage()]);
-    exit;
-}
+include '../config_database/connect.php'; // Include your database connection file
 
 $secret_key = "xynskthyvacmdjqeswdwytgokiqtqacblqeiwbxxadiyhpakzfiuhjucvfhbcycqaornyahhglpfqopahmjqtfgtvcbvpeoewztnhoyhlnlpkiwmasuxadrrtqtmsvb"; // Change this to a strong, secret key
 

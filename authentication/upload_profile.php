@@ -57,7 +57,7 @@ include_once '../config_database/connect.php'; // Your database connection file
             $stmt->execute();
 
             if ($stmt->rowCount() > 0) {
-                echo json_encode(["message" => "Profile photo uploaded successfully", "photo_url" => $targetFilePath]);
+                echo json_encode(["success" => "Profile photo uploaded successfully", "photo_url" => $targetFilePath]);
             } else {
                 echo json_encode(["error" => "Failed to update profile photo in the database"]);
             }

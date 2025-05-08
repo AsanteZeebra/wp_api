@@ -16,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Database connection
 $host = "localhost"; // Change this to your database host
-$db_name = "workpass";
+$dbname = "workpass";
 $username = "root";
 $password = "0249kwaku";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 if ($conn->connect_error) {
     echo json_encode(["status" => "error", "message" => "Connection failed: " . $conn->connect_error]);

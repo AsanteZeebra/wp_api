@@ -18,15 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once "../config_database/connect.php"; // Include your database connection file
 
 try {
+    // Create a new PDO instance
+   
     // Fetch all case details from the database
-    $sql = "SELECT * FROM cases";
+    $sql = "SELECT * FROM appointment";
     $stmt = $conn->query($sql);
-    $cases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $passports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($cases) {
-        echo json_encode(["status" => "success", "cases" => $cases]);
+    if ($passports) {
+        echo json_encode(["status" => "success", "appointments" => $passports]);
     } else {
-        echo json_encode(["status" => "error", "message" => "No cases found"]);
+        echo json_encode(["status" => "error", "message" => "No appointment found"]);
     }
 } catch (PDOException $e) {
     echo json_encode(["status" => "error", "message" => "Connection failed: " . $e->getMessage()]);
