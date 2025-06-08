@@ -16,16 +16,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once "../config_database/connect.php"; // Include your PDO database connection file
 
-// Check if employee_Id is provided in the URL
-if (!isset($_GET['employee_Id']) || empty(trim($_GET['employee_Id']))) {
-    echo json_encode(["status" => "error", "message" => "Employee ID is required"]);
+// Get JSON input
+$raw_data = file_get_contents("php://input");
+$data = json_decode($raw_data, true);
+
+if (!isset($data['task_id']) || empty(trim($data['task_id']))) {
+    echo json_encode(["status" => "error", "message" => "Task_ID is required"]);
     exit;
 }
 
-$employee_id = trim($_GET['employee_Id']);
+$employee_name = trim($data['task_id']);
 
-// Fetch salary details from database using PDO
-$sql = "SELECT * FROM salary WHERE employee_id = ?";
+// Fetch tasks assigned to the employee using PDO
+$sql = "SELECT * FROM tasks WHERE task_id = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -33,12 +36,12 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->execute([$employee_id]);
-$statements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt->execute([$employee_name]);
+$tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if ($statements && count($statements) > 0) {
-    echo json_encode(["status" => "success", "statements" => $statements]);
+if ($tasks && count($tasks) > 0) {
+    echo json_encode(["status" => "success", "tasks" => $tasks]);
 } else {
-    echo json_encode(["status" => "error", "message" => "No salary records found for this employee ID"]);
+    echo json_encode(["status" => "error", "message" => "No Assigned Tasks found"]);
 }
 ?>
